@@ -11,17 +11,6 @@ import (
 	"github.com/tOnkowzl/echo/middleware"
 )
 
-func makeSkipper(skipPath []string) middleware.Skipper {
-	var skipper map[string]bool
-	for _, v := range skipPath {
-		skipper[v] = true
-	}
-
-	return func(c echo.Context) bool {
-		return skipper[c.Path()]
-	}
-}
-
 func New(logger logrus.FieldLogger, appName string, skipPath []string) *Echo {
 	e := echo.New()
 	e.HideBanner = true
@@ -63,5 +52,16 @@ func (e *Echo) Start(port string) {
 
 	if err := e.Shutdown(ctx); err != nil {
 		e.Logger.Fatal("shutdown server:", err)
+	}
+}
+
+func makeSkipper(skipPath []string) middleware.Skipper {
+	var skipper map[string]bool
+	for _, v := range skipPath {
+		skipper[v] = true
+	}
+
+	return func(c echo.Context) bool {
+		return skipper[c.Path()]
 	}
 }
