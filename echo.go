@@ -11,12 +11,12 @@ import (
 	"github.com/tOnkowzl/echo/middleware"
 )
 
-func New(logger logrus.FieldLogger, appName string, skipPath []string) *Echo {
+func New(logger logrus.FieldLogger, appName string, skipLogPath []string) *Echo {
 	e := echo.New()
 	e.HideBanner = true
 	e.HidePort = true
 
-	skipper := makeSkipper(skipPath)
+	skipper := makeSkipper(skipLogPath)
 
 	e.Use(middleware.RequestID())
 	e.Use(middleware.Recover(logger))
@@ -55,9 +55,9 @@ func (e *Echo) Start(port string) {
 	}
 }
 
-func makeSkipper(skipPath []string) middleware.Skipper {
+func makeSkipper(skipLogPath []string) middleware.Skipper {
 	var skipper map[string]bool
-	for _, v := range skipPath {
+	for _, v := range skipLogPath {
 		skipper[v] = true
 	}
 
